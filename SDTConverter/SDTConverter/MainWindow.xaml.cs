@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SDTConverter
 {
@@ -165,59 +155,57 @@ namespace SDTConverter
             lbl_WhatIsSelected.Content = whatIsSelected;
         }
 
-        //private void SpeedConversion(string selectedValue)
-        //{
-        //    if (PrevValue.CaseInsensitiveContains("m/s") && selectedValue.CaseInsensitiveContains("km/h"))
-        //    {
-        //        txt_Speed.Text = Speed.GetKmH().ToString("0.###");
-        //    }
-        //    else if (PrevValue.CaseInsensitiveContains("km/h") && selectedValue.CaseInsensitiveContains("m/s"))
-        //    {
-        //        txt_Speed.Text = Speed.GetMetSec().ToString("0.###");
-        //    }
+        private void SpeedConversion(string selectedValue)
+        {
+            if (selectedValue.CaseInsensitiveContains("km/h"))
+            {
+                txt_Speed.Text = Speed.GetKmH().ToString("0.###");
+            }
+            else if (selectedValue.CaseInsensitiveContains("m/s"))
+            {
+                txt_Speed.Text = Speed.GetMetSec().ToString("0.###");
+            }
 
-        //    Speed.Format = selectedValue;
-        //}
+            SelectedVelocityFormat = selectedValue;
+        }
 
-        //private void DistanceConversion(string selectedValue)
-        //{
-        //    if (PrevValue.CaseInsensitiveContains("meter") && selectedValue.CaseInsensitiveContains("km"))
-        //    {
-        //        Dist.Value /= 1000;
-        //    }
-        //    else if (PrevValue.CaseInsensitiveContains("km") && selectedValue.CaseInsensitiveContains("meter"))
-        //    {
-        //        Dist.Value *= 1000;
-        //    }
+        private void DistanceConversion(string selectedValue)
+        {
+            if (PrevValue.CaseInsensitiveContains("meter") && selectedValue.CaseInsensitiveContains("km"))
+            {
+                txt_Distance.Text = Dist.GetKm().ToString("0.###");
+            }
+            else if (PrevValue.CaseInsensitiveContains("km") && selectedValue.CaseInsensitiveContains("meter"))
+            {
+                txt_Distance.Text = Dist.GetMeters().ToString("0.###");
+            }
 
-        //    Dist.Format = selectedValue;
+            SelectedDistanceFormat = selectedValue;
+        }
 
-        //    txt_Distance.Text = Dist.Value.ToString("0.###");
-        //}
+        private void TimeConvertion(string selectedValue)
+        {
+            if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("minute") || PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("hour") || PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("minute"))
+            {
+                time.Value /= 60;
+            }
+            else if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("hour"))
+            {
+                time.Value /= 3600;
+            }
+            else if (PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("second"))
+            {
+                time.Value *= 60;
+            }
+            else if (PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("second"))
+            {
+                time.Value *= 3600;
+            }
 
-        //private void TimeConvertion(string selectedValue)
-        //{
-        //    if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("minute") || PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("hour") || PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("minute"))
-        //    {
-        //        time.Value /= 60;
-        //    }
-        //    else if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("hour"))
-        //    {
-        //        time.Value /= 3600;
-        //    }
-        //    else if (PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("second"))
-        //    {
-        //        time.Value *= 60;
-        //    }
-        //    else if (PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("second"))
-        //    {
-        //        time.Value *= 3600;
-        //    }
+            time.Format = selectedValue;
 
-        //    time.Format = selectedValue;
-
-        //    txt_Time.Text = time.Value.ToString("0.###");
-        //}
+            txt_Time.Text = time.Value.ToString("0.###");
+        }
 
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -227,15 +215,15 @@ namespace SDTConverter
             {
                 if (((ComboBox)sender).Name == "cb_Speed")
                 {
-                    //SpeedConversion(selectedValue);
+                    SpeedConversion(selectedValue);
                 }
                 else if (((ComboBox)sender).Name == "cb_Distance")
                 {
-                    //DistanceConversion(selectedValue);
+                    DistanceConversion(selectedValue);
                 }
                 else if (((ComboBox)sender).Name == "cb_Time")
                 {
-                    //TimeConvertion(selectedValue);
+                    TimeConvertion(selectedValue);
                 }
             }
         }

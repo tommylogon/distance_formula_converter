@@ -25,13 +25,13 @@ namespace SDTConverter
         public void SetMetSec(double value)
         {
             MetSec = value;
-            KmH = MetSec / 3600;
+            KmH = MetSec * 3.6;
         }
 
         public void SetKmH(double value)
         {
             KmH = value;
-            MetSec = KmH * 3600;
+            MetSec = KmH / 3.6;
         }
 
         public string Format { get; set; }
