@@ -38,7 +38,7 @@ namespace SDTConverter
 
         public Velocity(double value, string format)
         {
-            MetSec = value;
+            SetMetSec(value);
             Format = format;
         }
 
