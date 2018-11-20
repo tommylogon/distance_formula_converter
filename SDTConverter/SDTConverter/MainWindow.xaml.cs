@@ -23,16 +23,29 @@ namespace SDTConverter
         private double Speed { get; set; } = 0.0;
         private double Time { get; set; } = 0.0;
         private double Distance { get; set; } = 0.0;
+        public object Assert { get; private set; }
 
         private bool TimeChanged = false;
         private bool SpeedChanged = false;
         private bool DistanceChanged = false;
+
+        private string PrevValue;
 
         private List<TextBox> tbList = new List<TextBox>();
 
         public MainWindow()
         {
             InitializeComponent();
+            SetInitialStates();
+        }
+
+        private void SetInitialStates()
+        {
+            Time = Double.Parse(txt_Time.Text);
+
+            Distance = Double.Parse(txt_Distance.Text);
+
+            Speed = Double.Parse(txt_Speed.Text);
         }
 
         private double GetSpeed()
@@ -93,18 +106,6 @@ namespace SDTConverter
                         Speed = Double.Parse(tb.Text);
                     }
                 }
-                if (TimeChanged & DistanceChanged)
-                {
-                    txt_Speed.Text = GetSpeed().ToString();
-                }
-                else if (DistanceChanged & SpeedChanged)
-                {
-                    txt_Time.Text = GetTime().ToString();
-                }
-                else if (SpeedChanged & TimeChanged)
-                {
-                    txt_Distance.Text = GetDistance().ToString();
-                }
             }
             catch (Exception ex)
             {
@@ -112,9 +113,26 @@ namespace SDTConverter
             }
         }
 
+        private void WhatToUpdate()
+        {
+            if (TimeChanged & DistanceChanged)
+            {
+                txt_Speed.Text = GetSpeed().ToString();
+            }
+            else if (DistanceChanged & SpeedChanged)
+            {
+                txt_Time.Text = GetTime().ToString();
+            }
+            else if (SpeedChanged & TimeChanged)
+            {
+                txt_Distance.Text = GetDistance().ToString();
+            }
+        }
+
         private void OnFocus(object sender, RoutedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
+            string whatIsSelected = "You have selected ";
 
             if (tbList.Count == 2)
             {
@@ -128,43 +146,95 @@ namespace SDTConverter
                 ChangeWhatIsTrue(tbList[0], false);
                 tbList.RemoveAt(0);
             }
-            else
+
+            tbList.Add(tb);
+            ChangeWhatIsTrue(tb, true);
+
+            foreach (TextBox tbSelected in tbList)
             {
-                tbList.Add(tb);
-                ChangeWhatIsTrue(tb, true);
+                whatIsSelected += tbSelected.Name + ", ";
             }
+            lbl_WhatIsSelected.Content = whatIsSelected;
+        }
+
+        private void SpeedConversion(string selectedValue)
+        {
+            if (PrevValue.CaseInsensitiveContains("m/s") && selectedValue.CaseInsensitiveContains("km/h"))
+            {
+                Speed *= 3.6;
+            }
+            else if (PrevValue.CaseInsensitiveContains("km/h") && selectedValue.CaseInsensitiveContains("m/s"))
+            {
+                Speed /= 3.6;
+            }
+            txt_Speed.Text = Speed.ToString("0.###");
+        }
+
+        private void DistanceConversion(string selectedValue)
+        {
+            if (PrevValue.CaseInsensitiveContains("meter") && selectedValue.CaseInsensitiveContains("km"))
+            {
+                Distance /= 1000;
+            }
+            else if (PrevValue.CaseInsensitiveContains("km") && selectedValue.CaseInsensitiveContains("meter"))
+            {
+                Distance *= 1000;
+            }
+            txt_Distance.Text = Distance.ToString("0.###");
+        }
+
+        private void TimeConvertion(string selectedValue)
+        {
+            if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("minute") || PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("hour") || PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("minute"))
+            {
+                Time /= 60;
+            }
+            else if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("hour"))
+            {
+                Time /= 3600;
+            }
+            else if (PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("second"))
+            {
+                Time *= 60;
+            }
+            else if (PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("second"))
+            {
+                Time *= 3600;
+            }
+
+            txt_Time.Text = Time.ToString("0.###");
         }
 
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string content = (string)((ComboBoxItem)((ComboBox)sender).SelectedItem).Content;
-            if (content?.Contains("m/s") == true)
+            string selectedValue = (string)((ComboBoxItem)((ComboBox)sender).SelectedItem).Content;
+
+            if (PrevValue != null)
             {
-                txt_Speed.Text = (Speed * 3600).ToString();
+                if (((ComboBox)sender).Name == "cb_Speed")
+                {
+                    SpeedConversion(selectedValue);
+                }
+                else if (((ComboBox)sender).Name == "cb_Distance")
+                {
+                    DistanceConversion(selectedValue);
+                }
+                else if (((ComboBox)sender).Name == "cb_Time")
+                {
+                    TimeConvertion(selectedValue);
+                }
             }
-            else if (content?.Contains("Km/H") == true)
+        }
+
+        private void CB_Got_Focus(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                txt_Speed.Text = (Speed / 3600).ToString();
+                PrevValue = (string)((ComboBoxItem)((ComboBox)sender).SelectedItem).Content;
             }
-            else if (content?.Contains("Sec") == true)
+            catch (Exception ex)
             {
-                txt_Time.Text = (Time * 60).ToString();
-            }
-            else if (content?.Contains("Min") == true)
-            {
-                txt_Time.Text = (Time / 60).ToString();
-            }
-            else if (content?.Contains("Hour") == true)
-            {
-                txt_Time.Text = (Time / 60).ToString();
-            }
-            else if (content?.Contains("Met") == true)
-            {
-                txt_Distance.Text = (Distance * 1000).ToString();
-            }
-            else if (content?.Contains("Km") == true)
-            {
-                txt_Distance.Text = (Distance / 1000).ToString();
+                MessageBox.Show(ex.Message);
             }
         }
     }

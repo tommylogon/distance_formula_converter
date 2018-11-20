@@ -4,30 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SDTConverter"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="468.579" Width="799.384">
     <Grid>
         <Viewbox HorizontalAlignment="Left" Height="418" Margin="10,10,0,0" VerticalAlignment="Top" Width="771">
             <Grid Height="233" Width="430">
-                <TextBox x:Name="txt_Speed" HorizontalAlignment="Left" Height="23" Margin="83,103,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120" TextChanged="HandleData" GotFocus="OnFocus" />
-                <TextBox x:Name="txt_Distance" HorizontalAlignment="Left" Height="23" Margin="83,129,0,0" TextWrapping="Wrap" Text="1000" VerticalAlignment="Top" Width="120" TextChanged="HandleData" GotFocus="OnFocus" />
-                <TextBox x:Name="txt_Time" HorizontalAlignment="Left" Height="23" Margin="83,157,0,0" TextWrapping="Wrap" Text="60" VerticalAlignment="Top" Width="120" TextChanged="HandleData" GotFocus="OnFocus" />
+                <TextBox x:Name="txt_Speed" HorizontalAlignment="Left" Height="23" Margin="83,103,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="71" TextChanged="HandleData" GotFocus="OnFocus" />
+                <TextBox x:Name="txt_Distance" HorizontalAlignment="Left" Height="23" Margin="83,129,0,0" TextWrapping="Wrap" Text="1000" VerticalAlignment="Top" Width="71" TextChanged="HandleData" GotFocus="OnFocus" />
+                <TextBox x:Name="txt_Time" HorizontalAlignment="Left" Height="23" Margin="83,157,0,0" TextWrapping="Wrap" Text="60" VerticalAlignment="Top" Width="71" TextChanged="HandleData" GotFocus="OnFocus" />
                 <Label x:Name="lbl_Time" Content="Time" HorizontalAlignment="Left" Margin="28,154,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.694,0.512" />
                 <Label x:Name="lbl_speed" Content="Speed" HorizontalAlignment="Left" Margin="28,103,0,0" VerticalAlignment="Top" />
                 <Label x:Name="lbl_Distance" Content="Distance" HorizontalAlignment="Left" Margin="28,126,0,0" VerticalAlignment="Top" />
-                <ComboBox HorizontalAlignment="Left" Margin="208,104,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" SelectionChanged="SelectionChanged">
+                <ComboBox x:Name="cb_Speed" HorizontalAlignment="Left" Margin="159,105,0,0" VerticalAlignment="Top" Width="32" SelectedIndex="0" SelectionChanged="SelectionChanged" GotFocus="CB_Got_Focus">
+                    <ComboBox.Resources>
+                        <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+                    </ComboBox.Resources>
                     <ComboBoxItem Content="m/s" />
                     <ComboBoxItem Content="Km/H" />
                 </ComboBox>
-                <ComboBox HorizontalAlignment="Left" Margin="208,131,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" SelectionChanged="SelectionChanged">
-                    <ComboBoxItem Content="met" />
+                <ComboBox x:Name="cb_Distance" HorizontalAlignment="Left" Margin="159,132,0,0" VerticalAlignment="Top" Width="32" SelectedIndex="0" SelectionChanged="SelectionChanged" GotFocus="CB_Got_Focus">
+                    <ComboBox.Resources>
+                        <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+                    </ComboBox.Resources>
+                    <ComboBoxItem Content="Meter" />
                     <ComboBoxItem Content="Km" />
                 </ComboBox>
-                <ComboBox HorizontalAlignment="Left" Margin="208,157,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" SelectionChanged="SelectionChanged">
-                    <ComboBoxItem Content="Sec" />
-                    <ComboBoxItem Content="Min" />
+                <ComboBox x:Name="cb_Time" HorizontalAlignment="Left" Margin="159,158,0,0" VerticalAlignment="Top" Width="32" SelectedIndex="0" SelectionChanged="SelectionChanged" GotFocus="CB_Got_Focus">
+                    <ComboBox.Resources>
+                        <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+                    </ComboBox.Resources>
+                    <ComboBoxItem Content="Second" />
+                    <ComboBoxItem Content="Minute" />
                     <ComboBoxItem Content="Hour" />
                 </ComboBox>
+                <Label x:Name="lbl_WhatIsSelected" Content="Label" HorizontalAlignment="Left" Margin="28,71,0,0" VerticalAlignment="Top" />
             </Grid>
         </Viewbox>
     </Grid>
