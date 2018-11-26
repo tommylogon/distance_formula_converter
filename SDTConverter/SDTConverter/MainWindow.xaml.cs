@@ -90,15 +90,40 @@ namespace SDTConverter
                 {
                     if (tb.Name.Contains("Time"))
                     {
-                        time.SetSecounds(Double.Parse(tb.Text));
+                        if (SelectedTimeFormat.CaseInsensitiveContains("second"))
+                        {
+                            time.SetSecounds(Double.Parse(tb.Text));
+                        }
+                        else if (SelectedTimeFormat.CaseInsensitiveContains("minute"))
+                        {
+                            time.Setminutes(Double.Parse(tb.Text));
+                        }
+                        else if (SelectedTimeFormat.CaseInsensitiveContains("hour"))
+                        {
+                            time.SetHours(Double.Parse(tb.Text));
+                        }
                     }
                     else if (tb.Name.Contains("Distance"))
                     {
-                        Dist.SetMeters(Double.Parse(tb.Text));
+                        if (SelectedDistanceFormat.CaseInsensitiveContains("meter"))
+                        {
+                            Dist.SetMeters(Double.Parse(tb.Text));
+                        }
+                        else if (SelectedDistanceFormat.CaseInsensitiveContains("km"))
+                        {
+                            Dist.SetKm(Double.Parse(tb.Text));
+                        }
                     }
                     else if (tb.Name.Contains("Speed"))
                     {
-                        Speed.SetMetSec(Double.Parse(tb.Text));
+                        if (SelectedVelocityFormat.CaseInsensitiveContains("m/s"))
+                        {
+                            Speed.SetMetSec(Double.Parse(tb.Text));
+                        }
+                        else if (SelectedVelocityFormat.CaseInsensitiveContains("km/h"))
+                        {
+                            Speed.SetKmH(Double.Parse(tb.Text));
+                        }
                     }
                 }
             }
@@ -185,26 +210,19 @@ namespace SDTConverter
 
         private void TimeConvertion(string selectedValue)
         {
-            if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("minute") || PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("hour") || PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("minute"))
+            if (selectedValue.CaseInsensitiveContains("minute"))
             {
-                time.Value /= 60;
+                txt_Time.Text = time.GetMinutes().ToString("0.###");
             }
-            else if (PrevValue.CaseInsensitiveContains("second") && selectedValue.CaseInsensitiveContains("hour"))
+            else if (selectedValue.CaseInsensitiveContains("hour"))
             {
-                time.Value /= 3600;
+                txt_Time.Text = time.GetHours().ToString("0.###");
             }
-            else if (PrevValue.CaseInsensitiveContains("minute") && selectedValue.CaseInsensitiveContains("second"))
+            else if (selectedValue.CaseInsensitiveContains("second"))
             {
-                time.Value *= 60;
+                txt_Time.Text = time.GetSeconds().ToString("0.###");
             }
-            else if (PrevValue.CaseInsensitiveContains("hour") && selectedValue.CaseInsensitiveContains("second"))
-            {
-                time.Value *= 3600;
-            }
-
-            time.Format = selectedValue;
-
-            txt_Time.Text = time.Value.ToString("0.###");
+            SelectedTimeFormat = selectedValue;
         }
 
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
